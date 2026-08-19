@@ -1,11 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
+using WorldFaith.Client.Network;
 
 namespace WorldFaith.Client.UI.Game
 {
@@ -100,8 +100,8 @@ namespace WorldFaith.Client.UI.Game
 
             if (req.result != UnityWebRequest.Result.Success) yield break;
 
-            var entries = JsonUtility.FromJson<LeaderboardEntryList>($"{{\"items\":{req.downloadHandler.text}}}");
-            RefreshList(entries?.items ?? new List<LeaderboardEntry>());
+            var entries = WorldFaithJson.Deserialize<List<LeaderboardEntry>>(req.downloadHandler.text);
+            RefreshList(entries ?? new List<LeaderboardEntry>());
         }
 
         private IEnumerator FetchMyStats(string playerId)
@@ -114,7 +114,7 @@ namespace WorldFaith.Client.UI.Game
             yield return req.SendWebRequest();
             if (req.result != UnityWebRequest.Result.Success) yield break;
 
-            var stats = JsonUtility.FromJson<LeaderboardEntry>(req.downloadHandler.text);
+            var stats = WorldFaithJson.Deserialize<LeaderboardEntry>(req.downloadHandler.text);
             if (stats == null) yield break;
 
             if (myRankText)    myRankText.text    = $"Rank #{stats.rank}";
@@ -163,8 +163,6 @@ namespace WorldFaith.Client.UI.Game
             }
         }
 
-        [Serializable]
-        private class LeaderboardEntryList { public List<LeaderboardEntry> items; }
     }
 
     // ══════════════════════════════════════════════

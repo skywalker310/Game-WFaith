@@ -155,6 +155,56 @@ namespace WorldFaith.Editor
             else    Debug.LogWarning("⚠️ Một số components còn thiếu — chạy Setup trước");
         }
 
+        [MenuItem(MenuRoot + "Validate/Check SignalR DLLs")]
+        public static void ValidateSignalRDlls()
+        {
+            var dir = "Assets/Plugins/SignalR";
+            var required = new[]
+            {
+                "Microsoft.AspNetCore.SignalR.Client.dll",
+                "Microsoft.AspNetCore.SignalR.Client.Core.dll",
+                "Microsoft.AspNetCore.SignalR.Common.dll",
+                "Microsoft.AspNetCore.SignalR.Protocols.Json.dll",
+                "Microsoft.AspNetCore.Http.Connections.Client.dll",
+                "Microsoft.AspNetCore.Http.Connections.Common.dll"
+            };
+
+            bool ok = true;
+            foreach (var dll in required)
+            {
+                var path = $"{dir}/{dll}";
+                if (System.IO.File.Exists(path))
+                    Debug.Log($"✅ {dll}");
+                else
+                {
+                    Debug.LogError($"❌ Thiếu {dll} — chạy scripts/setup-unity-client.sh");
+                    ok = false;
+                }
+            }
+
+            if (ok) Debug.Log("✅ SignalR DLLs đầy đủ");
+        }
+
+        [MenuItem(MenuRoot + "Validate/Check Shared Library")]
+        public static void ValidateSharedLibrary()
+        {
+            var dir = "Assets/WorldFaith/Shared";
+            var required = new[] { "Enums/GameEnums.cs", "Models/GameModels.cs", "Contracts/SignalRContracts.cs" };
+            bool ok = true;
+            foreach (var f in required)
+            {
+                var path = $"{dir}/{f}";
+                if (System.IO.File.Exists(path))
+                    Debug.Log($"✅ {f}");
+                else
+                {
+                    Debug.LogError($"❌ Thiếu {f} — chạy scripts/setup-unity-client.sh");
+                    ok = false;
+                }
+            }
+            if (ok) Debug.Log("✅ Shared Library đầy đủ");
+        }
+
         // ─── Build Helpers ────────────────────────────────────
 
         [MenuItem(MenuRoot + "Build/Log Build Info")]

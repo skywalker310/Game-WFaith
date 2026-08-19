@@ -133,9 +133,15 @@ Script `CameraController.cs` dùng **Input System** để xử lý kéo/zoom/ch�
 
 ## Bước 4 — Cài SignalR (kết nối realtime)
 
+> ⚡ **Cách nhanh (khuyến nghị):** từ thư mục gốc repo, chạy:
+> ```bash
+> ./scripts/setup-unity-client.sh
+> ```
+> Script này cài **cả SignalR DLL lẫn Shared Library** (Bước 4 + 5).
+
 SignalR là thư viện giúp client nói chuyện realtime với server. Nó **không có** trong Package Manager nên phải cài tay (dùng .NET để tải về rồi chép 6 file DLL vào Unity).
 
-### Mac / Linux
+### Mac / Linux (thủ công)
 
 Chạy từ thư mục gốc `Game-new`:
 
@@ -204,9 +210,11 @@ Write-Host "Xong."
 
 ## Bước 5 — Sao chép Shared Library
 
+> ⚡ Đã chạy `./scripts/setup-unity-client.sh` ở Bước 4? Bước này **đã xong** — bỏ qua phần thủ công bên dưới.
+
 Shared Library chứa các enum, model, contract mà **cả server lẫn client đều dùng**. Unity cần một bản sao mã nguồn này.
 
-### Mac / Linux
+### Mac / Linux (thủ công)
 
 ```bash
 cd Game-new
@@ -245,6 +253,8 @@ Write-Host "Đã sao chép Shared Library."
 # Phần B — Dựng scene & cấu hình
 
 ## Bước 6 — Tạo 3 scene
+
+> ⚡ **Cách nhanh:** trong Unity Editor, chọn menu **WorldFaith → Bootstrap → Full Project Setup**. Công cụ này tự tạo 3 scene, placeholder tiles và cấu hình Build Settings.
 
 WorldFaith dùng **3 scene** nạp theo thứ tự cố định. Project không kèm sẵn — bạn phải tự tạo bằng công cụ Setup tích hợp.
 

@@ -3,6 +3,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
+using WorldFaith.Client.Network;
 using WorldFaith.Shared.Contracts.Auth;
 
 namespace WorldFaith.Client.Managers
@@ -123,6 +124,7 @@ namespace WorldFaith.Client.Managers
             PlayerPrefs.SetString(KeyExpiresAt, response.ExpiresAt.ToString());
             PlayerPrefs.SetString(KeyPlayerId, response.Player?.Id ?? "");
             PlayerPrefs.SetString(KeyDisplayName, response.Player?.DisplayName ?? "");
+            PlayerPrefs.SetString("wf_server_url", serverUrl);
             PlayerPrefs.Save();
 
             CurrentPlayer = response.Player!;
@@ -146,7 +148,7 @@ namespace WorldFaith.Client.Managers
             where TResponse : class
         {
             var url = $"{serverUrl}/{endpoint}";
-            var json = JsonUtility.ToJson(body);
+            var json = WorldFaithJson.Serialize(body);
             var bytes = Encoding.UTF8.GetBytes(json);
 
             using var request = new UnityWebRequest(url, "POST");
@@ -169,11 +171,11 @@ namespace WorldFaith.Client.Managers
 
             try
             {
-                return JsonUtility.FromJson<TResponse>(request.downloadHandler.text);
+                return WorldFaithJson.Deserialize<TResponse>(request.downloadHandler.text);
             }
             catch (Exception ex)
             {
-                Debug.LogError($"[AuthManager] Parse error: {ex.Message}");
+                Debug.LogError($"[AuthManager] Parse error: {ex.Message}\n{request.downloadHandler.text}");
                 return null;
             }
         }
